@@ -1,0 +1,5 @@
+# Ignore LaTeX generated files
+graphSLAM_formulation.*
+!graphSLAM_formulation.ipynb
+!graphSLAM_formulation.pdf
+!graphSLAM_formulation.tex
