@@ -9,6 +9,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+#: The difference that will be used for numerical differentiation
+EPSILON = 1e-6
+
+
 class EdgeOdometry:
     r"""A class for representing odometry edges in Graph SLAM.
 
@@ -53,6 +57,45 @@ class EdgeOdometry:
         """
         return (self.estimate - (self.vertices[1].pose - self.vertices[0].pose)).to_compact()
 
+    def calc_chi2(self):
+        r"""Calculate the :math:`\chi^2` error for the edge.
+
+        .. math::
+
+           \mathbf{e}_j^T \Omega_j \mathbf{e}_j
+
+
+        Returns
+        -------
+        float
+            The :math:`\chi^2` error for the edge
+
+        """
+        err = self.calc_error()
+
+        return np.dot(np.dot(np.transpose(err), self.information), err)
+
+    def calc_chi2_gradient_hessian(self):
+        r"""Calculate the edge's contributions to the graph's :math:`\chi^2` error, gradient (:math:`\mathbf{b}`), and Hessian (:math:`H`).
+
+        Returns
+        -------
+        float
+            The :math:`\chi^2` error for the edge
+        dict
+            The edge's contribution(s) to the gradient
+        dict
+            The edge's contribution(s) to the Hessian
+
+        """
+        chi2 = self.calc_chi2()
+
+        err = self.calc_error()
+
+        jacobians = self.calc_jacobians()
+
+        return chi2, {v.index: np.dot(np.dot(np.transpose(err), self.information), jacobian) for v, jacobian in zip(self.vertices, jacobians)}, {(self.vertices[i].index, self.vertices[j].index): np.dot(np.dot(np.transpose(jacobians[i]), self.information), jacobians[j]) for i in range(len(jacobians)) for j in range(i, len(jacobians))}
+
     def calc_jacobians(self):
         r"""Calculate the Jacobian of the edge's error with respect to each constrained pose.
 
@@ -67,8 +110,47 @@ class EdgeOdometry:
             The Jacobian matrices for the edge with respect to each constrained pose
 
         """
-        return [np.dot(np.dot(self.estimate.jacobian_self_ominus_other_wrt_other_compact(self.vertices[1].pose - self.vertices[0].pose), self.vertices[1].pose.jacobian_self_ominus_other_wrt_other(self.vertices[0].pose)), self.vertices[0].pose.jacobian_boxplus()),
-                np.dot(np.dot(self.estimate.jacobian_self_ominus_other_wrt_other_compact(self.vertices[1].pose - self.vertices[0].pose), self.vertices[1].pose.jacobian_self_ominus_other_wrt_self(self.vertices[0].pose)), self.vertices[1].pose.jacobian_boxplus())]
+        err = self.calc_error()
+
+        # The dimensionality of the compact pose representation
+        dim = len(self.vertices[0].pose.to_compact())
+
+        return [self._calc_jacobian(err, dim, i) for i in range(len(self.vertices))]
+
+    def _calc_jacobian(self, err, dim, vertex_index):
+        r"""Calculate the Jacobian of the edge with respect to the specified vertex's pose.
+
+        Parameters
+        ----------
+        err : np.ndarray
+            The current error for the edge (see :meth:`BaseEdge.calc_error`)
+        dim : int
+            The dimensionality of the compact pose representation
+        vertex_index : int
+            The index of the vertex (pose) for which we are computing the Jacobian
+
+        Returns
+        -------
+        np.ndarray
+            The Jacobian of the edge with respect to the specified vertex's pose
+
+        """
+        jacobian = np.zeros(err.shape + (dim,))
+        p0 = self.vertices[vertex_index].pose.copy()
+
+        for d in range(dim):
+            # update the pose
+            delta_pose = np.zeros(dim)
+            delta_pose[d] = EPSILON
+            self.vertices[vertex_index].pose += delta_pose
+
+            # compute the numerical derivative
+            jacobian[:, d] = (self.calc_error() - err) / EPSILON
+
+            # restore the pose
+            self.vertices[vertex_index].pose = p0.copy()
+
+        return jacobian
 
     def to_g2o(self):
         """Export the edge to the .g2o format.
