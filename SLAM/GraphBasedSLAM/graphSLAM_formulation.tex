@@ -67,7 +67,7 @@ since $p(\mathcal{Z})$ is a constant (albeit, an unknown constant) and we assume
     \argmax_{\mathbf{p}_1, \ldots, \mathbf{p}_N} \ p(\mathbf{p}_1, \ldots, \mathbf{p}_N \ | \ \mathcal{Z}) &= \argmax_{\mathbf{p}_1, \ldots, \mathbf{p}_N} \ p( \mathcal{Z} \ | \ \mathbf{p}_1, \ldots, \mathbf{p}_N) \\
     &= \argmax_{\mathbf{p}_1, \ldots, \mathbf{p}_N} \prod_{j=1}^M p(\mathbf{z}_j \ | \ \mathbf{p}_1, \ldots, \mathbf{p}_N) \\
     &= \argmax_{\mathbf{p}_1, \ldots, \mathbf{p}_N} \prod_{j=1}^M \exp \left( -(\mathbf{e}_j(\mathbf{z}_j, \hat{\mathbf{z}}_j))^\transp \Omega_j \mathbf{e}_j(\mathbf{z}_j, \hat{\mathbf{z}}_j) \right) \\
-    &= \argmax_{\mathbf{p}_1, \ldots, \mathbf{p}_N} \sum_{j=1}^M (\mathbf{e}_j(\mathbf{z}_j, \hat{\mathbf{z}}_j))^\transp \Omega_j \mathbf{e}_j(\mathbf{z}_j, \hat{\mathbf{z}}_j).
+    &= \argmin_{\mathbf{p}_1, \ldots, \mathbf{p}_N} \sum_{j=1}^M (\mathbf{e}_j(\mathbf{z}_j, \hat{\mathbf{z}}_j))^\transp \Omega_j \mathbf{e}_j(\mathbf{z}_j, \hat{\mathbf{z}}_j).
 \end{align*}
 %
 We define
@@ -133,7 +133,7 @@ The $\chi^2$ error at iteration $k+1$ is
     \chi_{k+1}^2 = \sum_{e_j \in \mathcal{E}} \underbrace{\left[ \mathbf{e}_j(\mathbf{x}^{k+1}) \right]^\transp}_{1 \times \bullet} \underbrace{\Omega_j}_{\bullet \times \bullet} \underbrace{\mathbf{e}_j(\mathbf{x}^{k+1})}_{\bullet \times 1}.  \label{eq:chisq_at_kplusone}
 \end{equation}
 %
-We will linearize the errors as:
+We will linearize the residuals as:
 %
 \begin{align}
     \mathbf{e}_j(\mathbf{x}^{k+1}) &= \mathbf{e}_j(\mathbf{x}^k \boxplus \Delta \mathbf{x}^k) \notag \\
