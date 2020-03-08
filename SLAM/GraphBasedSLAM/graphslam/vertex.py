@@ -15,7 +15,7 @@ class Vertex:
     ----------
     vertex_id : int
         The vertex's unique ID
-    pose : graphslam.pose.base_pose.BasePose
+    pose : graphslam.pose.se2.PoseSE2
         The pose associated with the vertex
     vertex_index : int, None
         The vertex's index in the graph's ``vertices`` list
@@ -26,7 +26,7 @@ class Vertex:
         The vertex's unique ID
     index : int, None
         The vertex's index in the graph's ``vertices`` list
-    pose : graphslam.pose.base_pose.BasePose
+    pose : graphslam.pose.se2.PoseSE2
         The pose associated with the vertex
 
     """

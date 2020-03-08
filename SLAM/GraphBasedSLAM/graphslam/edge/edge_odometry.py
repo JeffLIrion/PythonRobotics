@@ -22,7 +22,7 @@ class EdgeOdometry:
         A list of the vertices constrained by the edge
     information : np.ndarray
         The information matrix :math:`\Omega_j` associated with the edge
-    estimate : BasePose
+    estimate : graphslam.pose.se2.PoseSE2
         The expected measurement :math:`\mathbf{z}_j`
 
     Attributes
@@ -123,7 +123,7 @@ class EdgeOdometry:
         Parameters
         ----------
         err : np.ndarray
-            The current error for the edge (see :meth:`BaseEdge.calc_error`)
+            The current error for the edge (see :meth:`EdgeOdometry.calc_error`)
         dim : int
             The dimensionality of the compact pose representation
         vertex_index : int
