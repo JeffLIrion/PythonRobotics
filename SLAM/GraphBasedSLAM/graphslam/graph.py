@@ -135,7 +135,8 @@ class Graph(object):
             The :math:`\chi^2` error
 
         """
-        return sum((e.calc_chi2() for e in self._edges))
+        self._chi2 = sum((e.calc_chi2() for e in self._edges))
+        return self._chi2
 
     def _calc_chi2_gradient_hessian(self):
         r"""Calculate the :math:`\chi^2` error, the gradient :math:`\mathbf{b}`, and the Hessian :math:`H`.
@@ -212,6 +213,11 @@ class Graph(object):
             for v, dx_i in zip(self._vertices, np.split(dx, n)):
                 v.pose += dx_i
 
+        # If we reached the maximum number of iterations, print out the final iteration's results
+        self.calc_chi2()
+        rel_diff = (chi2_prev - self._chi2) / (chi2_prev + np.finfo(float).eps)
+        print("{:9d} {:20.4f} {:18.6f}".format(max_iter, self._chi2, -rel_diff))
+
     def to_g2o(self, outfile):
         """Save the graph in .g2o format.
 
@@ -228,7 +234,7 @@ class Graph(object):
             for e in self._edges:
                 f.write(e.to_g2o())
 
-    def plot(self, vertex_color='r', vertex_marker='o', vertex_markersize=3, edge_color='b'):
+    def plot(self, vertex_color='r', vertex_marker='o', vertex_markersize=3, edge_color='b', title=None):
         """Plot the graph.
 
         Parameters
@@ -241,6 +247,8 @@ class Graph(object):
             The size of the plotted vertices
         edge_color : str
             The color that will be used to plot the edges
+        title : str, None
+            The title that will be used for the plot
 
         """
         plt.figure()
@@ -250,5 +258,8 @@ class Graph(object):
 
         for v in self._vertices:
             v.plot(vertex_color, vertex_marker, vertex_markersize)
+
+        if title:
+            plt.title(title)
 
         plt.show()
