@@ -77,7 +77,7 @@ class Graph(object):
 
     Parameters
     ----------
-    edges : list[graphslam.edge.base_edge.BaseEdge]
+    edges : list[graphslam.edge.edge_odometry.EdgeOdometry]
         A list of the vertices in the graph
     vertices : list[graphslam.vertex.Vertex]
         A list of the vertices in the graph
@@ -86,7 +86,7 @@ class Graph(object):
     ----------
     _chi2 : float, None
         The current :math:`\chi^2` error, or ``None`` if it has not yet been computed
-    _edges : list[graphslam.edge.base_edge.BaseEdge]
+    _edges : list[graphslam.edge.edge_odometry.EdgeOdometry]
         A list of the edges (i.e., constraints) in the graph
     _gradient : numpy.ndarray, None
         The gradient :math:`\mathbf{b}` of the :math:`\chi^2` error, or ``None`` if it has not yet been computed
