@@ -61,7 +61,7 @@ Using Bayes' rule, we can write this probability as
     &\propto p( \mathcal{Z} \ | \ \mathbf{p}_1, \ldots, \mathbf{p}_N), \label{eq:bayes}
 \end{align}
 %
-since $p(\mathcal{Z})$ is a constant (albeit, an unknown constant) and we assume that $p(\mathbf{p}_1, \ldots, \mathbf{p}_N)$ is uniformly distributed.  Therefore, we can use \eqref{eq:observation_probability} and \eqref{eq:bayes} to simplify the Graph SLAM optimization as follows:
+since $p(\mathcal{Z})$ is a constant (albeit, an unknown constant) and we assume that $p(\mathbf{p}_1, \ldots, \mathbf{p}_N)$ is uniformly distributed \cite{thrun2006graph}.  Therefore, we can use \eqref{eq:observation_probability} and \eqref{eq:bayes} to simplify the Graph SLAM optimization as follows:
 %
 \begin{align*}
     \argmax_{\mathbf{p}_1, \ldots, \mathbf{p}_N} \ p(\mathbf{p}_1, \ldots, \mathbf{p}_N \ | \ \mathcal{Z}) &= \argmax_{\mathbf{p}_1, \ldots, \mathbf{p}_N} \ p( \mathcal{Z} \ | \ \mathbf{p}_1, \ldots, \mathbf{p}_N) \\
@@ -88,7 +88,7 @@ Before proceeding further, it is helpful to discuss the dimensionality of the pr
     \item Each pose $\mathbf{p}_i$ is represented as a vector in (a subset of) $\mathbb{R}^d$.  For example:
     \begin{itemize}
       \item[$\circ$] An $SE(2)$ pose is typically represented as $(x, y, \theta)$, and thus $d = 3$.
-      \item[$\circ$] An $SE(3)$ pose is typically represented as $(x, y, z, q_x, q_y, q_z, q_w)$, where $(x, y, z)$ is a point in $\mathbb{R}^3$ and $(q_x, q_y, q_z, q_w)$ is a \keyterm{quaternion}, and so $d = 7$.
+      \item[$\circ$] An $SE(3)$ pose is typically represented as $(x, y, z, q_x, q_y, q_z, q_w)$, where $(x, y, z)$ is a point in $\mathbb{R}^3$ and $(q_x, q_y, q_z, q_w)$ is a \keyterm{quaternion}, and so $d = 7$.  For more information about $SE(3)$ parameterizations and pose transformations, see \cite{blanco2010tutorial}.
     \end{itemize}
     \item We also need to be able to represent each pose compactly as a vector in (a subset of) $\mathbb{R}^c$.
     \begin{itemize}
@@ -108,7 +108,7 @@ Before proceeding further, it is helpful to discuss the dimensionality of the pr
 
 \section{Graph SLAM Algorithm}
 
-The ``Graph'' in Graph SLAM refers to the fact that we view the problem as a graph.  The graph has a set $\mathcal{V}$ of $N$ vertices, where each vertex $v_i$ has an associated pose $\mathbf{p}_i$.  Similarly, the graph has a set $\mathcal{E}$ of $M$ edges, where each edge $e_j$ has an associated measurement $\mathbf{z}_j$.  In practice, the edges in this graph are either unary (i.e., a loop) or binary.  (Note: $e_j$ refers to the edge in the graph associated with measurement $\mathbf{z}_j$, whereas $\mathbf{e}_j$ refers to the residual function associated with $\mathbf{z}_j$.)
+The ``Graph'' in Graph SLAM refers to the fact that we view the problem as a graph.  The graph has a set $\mathcal{V}$ of $N$ vertices, where each vertex $v_i$ has an associated pose $\mathbf{p}_i$.  Similarly, the graph has a set $\mathcal{E}$ of $M$ edges, where each edge $e_j$ has an associated measurement $\mathbf{z}_j$.  In practice, the edges in this graph are either unary (i.e., a loop) or binary.  (Note: $e_j$ refers to the edge in the graph associated with measurement $\mathbf{z}_j$, whereas $\mathbf{e}_j$ refers to the residual function associated with $\mathbf{z}_j$.)  For more information about the Graph SLAM algorithm, see \cite{grisetti2010tutorial}.
 
 We want to optimize
 %
@@ -168,5 +168,8 @@ Using this notation, we obtain the optimal update as
 We apply this update to the poses via \eqref{eq:update} and repeat until convergence.
 
 
+
+\bibliographystyle{acm}
+\bibliography{graphSLAM}{}
 
 \end{document}
