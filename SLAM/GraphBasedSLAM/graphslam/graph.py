@@ -13,7 +13,6 @@ import numpy as np
 from scipy.sparse import SparseEfficiencyWarning, lil_matrix
 from scipy.sparse.linalg import spsolve
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D  # noqa pylint: disable=unused-import
 
 
 warnings.simplefilter("ignore", SparseEfficiencyWarning)
@@ -241,8 +240,6 @@ class Graph(object):
 
         """
         fig = plt.figure()
-        if len(self._vertices[0].pose.position) == 3:
-            fig.add_subplot(111, projection='3d')
 
         for e in self._edges:
             e.plot(edge_color)
