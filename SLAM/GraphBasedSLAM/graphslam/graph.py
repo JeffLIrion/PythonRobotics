@@ -239,7 +239,7 @@ class Graph(object):
             The color that will be used to plot the edges
 
         """
-        fig = plt.figure()
+        plt.figure()
 
         for e in self._edges:
             e.plot(edge_color)
