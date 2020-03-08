@@ -1,4 +1,8 @@
 # Copyright (c) 2020 Jeff Irion and contributors
+#
+# This file originated from the `graphslam` package:
+#
+#   https://github.com/JeffLIrion/python-graphslam
 
 r"""A ``Graph`` class that stores the edges and vertices required for Graph SLAM.
 
